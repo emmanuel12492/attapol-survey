@@ -15,21 +15,32 @@ const questionTypes = [
 const surveySchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
-  questions: z.array(z.object({
-    text: z.string().min(1, "Question text is required"),
-    type: z.enum(["multiple_choice", "text", "rating"]),
-    options: z.array(z.string()).default([""]),
-    required: z.boolean().default(true),
-  })).min(1, "At least one question is required"),
+  questions: z.array(
+    z.object({
+      text: z.string().min(1, "Question text is required"),
+      type: z.enum(["multiple_choice", "text", "rating"]),
+      options: z.array(z.string()).nonempty(),
+      required: z.boolean(),
+    })
+  ).min(1, "At least one question is required"),
 })
 
-type FormData = z.infer<typeof surveySchema>
+type FormData = {
+  title: string
+  description?: string
+  questions: {
+    text: string
+    type: "multiple_choice" | "text" | "rating"
+    options: string[]
+    required: boolean
+  }[]
+}
 
 export function SurveyForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<FormData>({
+  const form = useForm<z.infer<typeof surveySchema>>({
     resolver: zodResolver(surveySchema),
     defaultValues: {
       title: "",
