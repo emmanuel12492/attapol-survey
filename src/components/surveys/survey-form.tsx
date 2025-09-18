@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation"
 import { useForm, useFieldArray } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import { QuestionData } from "@/types/survey"
+
+interface FormField extends QuestionData {
+  options: string[]  // Make options required for form fields
+}
 
 const questionTypes = [
   { label: "Multiple Choice", value: "multiple_choice" },
@@ -139,7 +144,7 @@ export function SurveyForm() {
           </button>
         </div>
 
-        {questionFields.map((field: Record<string, any>, index: number) => (
+        {questionFields.map((field: FormField & { id: string }, index: number) => (
           <div key={field.id} className="border rounded-lg p-4 space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex-1 space-y-4">

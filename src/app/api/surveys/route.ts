@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
 import { authOptions } from "../../../lib/auth"
 import { prisma } from "../../../lib/prisma"
+import { QuestionData, SurveyFormData } from "../../../types/survey"
 
 export async function POST(req: Request) {
   try {
@@ -11,14 +12,14 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const json = await req.json()
+    const json = (await req.json()) as SurveyFormData
     const survey = await prisma.survey.create({
       data: {
         title: json.title,
         description: json.description,
         userId: session.user.id,
         questions: {
-          create: json.questions.map((q: any) => ({
+          create: json.questions.map((q: QuestionData) => ({
             text: q.text,
             type: q.type,
             options: JSON.stringify(q.options || []),
