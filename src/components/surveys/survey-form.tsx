@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useForm, useFieldArray } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import { useSession } from "next-auth/react"
 import { QuestionData } from "@/types/survey"
 
 interface FormField extends QuestionData {
@@ -43,7 +44,17 @@ type FormData = {
 
 export function SurveyForm() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [isLoading, setIsLoading] = useState(false)
+
+  if (status === "loading") {
+    return <div>Loading...</div>
+  }
+
+  if (!session) {
+    router.push("/login")
+    return null
+  }
 
   const form = useForm<z.infer<typeof surveySchema>>({
     resolver: zodResolver(surveySchema),
