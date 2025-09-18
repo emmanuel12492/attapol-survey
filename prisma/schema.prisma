@@ -1,0 +1,67 @@
+// This is your Prisma schema file
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String?
+  surveys   Survey[]
+  responses Response[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Survey {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  questions   Question[]
+  responses   Response[]
+  createdBy   User       @relation(fields: [userId], references: [id])
+  userId      String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Question {
+  id          String     @id @default(cuid())
+  text        String
+  type        String     // 'multiple_choice', 'text', 'rating'
+  options     String     // JSON string for multiple choice options
+  required    Boolean    @default(true)
+  survey      Survey     @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  surveyId    String
+  answers     Answer[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Response {
+  id        String    @id @default(cuid())
+  survey    Survey    @relation(fields: [surveyId], references: [id])
+  surveyId  String
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?
+  answers   Answer[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Answer {
+  id         String    @id @default(cuid())
+  value      String
+  question   Question  @relation(fields: [questionId], references: [id])
+  questionId String
+  response   Response  @relation(fields: [responseId], references: [id])
+  responseId String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
