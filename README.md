@@ -1,13 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AttaPoll Survey Application
 
-## Getting Started
+A survey creation and management application built with Next.js, NextAuth.js, and Prisma.
 
-First, run the development server:
+## Features
 
+- User Authentication
+- Survey Creation
+- Multiple Question Types (Multiple Choice, Text, Rating)
+- Responsive Design
+- PostgreSQL Database
+
+## Tech Stack
+
+- Next.js 15
+- TypeScript
+- NextAuth.js for authentication
+- Prisma as ORM
+- Tailwind CSS for styling
+- PostgreSQL for database
+
+## Local Development
+
+1. Clone the repository:
+```bash
+git clone https://github.com/emmanuel12492/attapol-survey.git
+cd attapol-survey
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+4. Update the environment variables in `.env`:
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/attapoll"
+NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+5. Run database migrations:
+```bash
+npx prisma migrate dev
+```
+
+6. Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
+```
 # or
 pnpm dev
 # or
