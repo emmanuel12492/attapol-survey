@@ -47,15 +47,6 @@ export function SurveyForm() {
   const { data: session, status } = useSession()
   const [isLoading, setIsLoading] = useState(false)
 
-  if (status === "loading") {
-    return <div>Loading...</div>
-  }
-
-  if (!session) {
-    router.push("/login")
-    return null
-  }
-
   const form = useForm<z.infer<typeof surveySchema>>({
     resolver: zodResolver(surveySchema),
     defaultValues: {
@@ -77,6 +68,15 @@ export function SurveyForm() {
       name: "questions",
       control: form.control,
     })
+
+  if (status === "loading") {
+    return <div>Loading...</div>
+  }
+
+  if (!session) {
+    router.push("/login")
+    return null
+  }
 
   async function onSubmit(data: FormData) {
     setIsLoading(true)
