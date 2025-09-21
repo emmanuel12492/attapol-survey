@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation'
 
-export default function RootPage() {
+export const runtime = 'edge'
+
+export default async function RootPage() {
   redirect('/home')
 }
